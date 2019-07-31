@@ -117,14 +117,8 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       foreach ($package['contents'] as $item_id => $values) {
         $_product = $values['data'];
         $weight = $_product->get_weight() * $values['quantity'];
-        $product_id = $_product->get_id();
+        // $product_id = $_product->get_id();
         // $weight = $weight + $_product->get_weight() * $values['quantity'];
-        $dropoff_address =
-          $package['destination']['address'] .
-          ',' .
-          $package['destination']['city'];
-
-        $package_size = $this->get_package_size($weight);
 
         if (
           empty($package['destination']['address']) ||
@@ -135,28 +129,36 @@ class WC_Shipping_Paps extends WC_Shipping_Method
             true
           );
         } else {
-          $quoteRequestParams = array(
-            'origin' => $pickup_adress,
-            'destination' => $dropoff_address,
-            'packageSize' => $package_size
-          );
-
-          if ($this->is_express == "yes") {
-            $quoteRequestParams['deliveryType'] = "express";
-          }
-
-          $quote = wc_paps()
-            ->api()
-            ->getQuote($quoteRequestParams);
-
-          wc_paps()->debug(
-            'Requested a quote and here is the response: ' .
-              print_r($quoteRequestParams . $quote)
-          );
-
-          $cost = $cost + $quote['data']['quote'];
+          $package_size = $this->get_package_size($weight);
+          $dropoff_address =
+            $package['destination']['address'] .
+            ',' .
+            $package['destination']['city'] .
+            ',' .
+            $package['destination']['country'];
         }
       }
+
+      $quoteRequestParams = array(
+        'origin' => $pickup_adress,
+        'destination' => $dropoff_address,
+        'packageSize' => $package_size
+      );
+
+      if ($this->is_express == "yes") {
+        $quoteRequestParams['deliveryType'] = "express";
+      }
+
+      $quote = wc_paps()
+        ->api()
+        ->getQuote($quoteRequestParams);
+
+      wc_paps()->debug(
+        'Requested a quote and here is the response: ' .
+          print_r($quoteRequestParams . $quote)
+      );
+
+      $cost = $quote['data']['quote'];
 
       if (!is_wp_error($quote)) {
         $rate = array(

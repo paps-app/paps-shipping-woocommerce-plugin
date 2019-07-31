@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Paps Shipping for WooCommerce
 	Description: Paps Shipping & Delivery Tracking Integration for WooCommerce
-	Version: 1.2.0
+	Version: 1.2.2
 	Author: Paps
 	Author URI: www.paps.sn
 */
@@ -179,10 +179,15 @@ class WC_Paps
         //       $order->customer_note;
         //   }
 
-        //   if (!empty($order->shipping_city)) {
-        //     $paramsPaps['customerAddress'] =
-        //       $paramsPaps['customerAddress'] . ' ' . $order->shipping_city;
-        //   }
+        if (!empty($order->shipping_city)) {
+          $paramsPaps['customerAddress'] =
+            $paramsPaps['customerAddress'] . ', ' . $order->shipping_city;
+        }
+
+        if (!empty($order->shipping_country)) {
+          $paramsPaps['customerAddress'] =
+            $paramsPaps['customerAddress'] . ', ' . $order->shipping_country;
+        }
 
         foreach ($items as $item) {
           $product_object = $item->get_product();
@@ -534,29 +539,29 @@ class WC_Paps
     # code...
     ?>
 
-        <h2>Shipping</h2>
+    <h2>Shipping</h2>
 
-        <table class="shop_table paps_delivery">
-            <tbody>
-            <tr>
-                <th>Shipping method:</th>
-                <td><?php echo $shipping_method['name']; ?></td>
-            </tr>
+    <table class="shop_table paps_delivery">
+      <tbody>
+        <tr>
+          <th>Shipping method:</th>
+          <td><?php echo $shipping_method['name']; ?></td>
+        </tr>
 
-            <tr>
-                <th>Delivery status:</th>
-                <td><?php echo $text_status; ?>
-                  <?php if ($tracking_link) { ?>
-                    <a target="_blank" href="<?php echo $tracking_link; ?>"> Cliquez ici</a> pour suivre la course.
-                    
-                 <?php } ?>
-                  </td>
-            </tr>
+        <tr>
+          <th>Delivery status:</th>
+          <td><?php echo $text_status; ?>
+            <?php if ($tracking_link) { ?>
+              <a target="_blank" href="<?php echo $tracking_link; ?>"> Cliquez ici</a> pour suivre la course.
 
-            </tbody>
-        </table>
+            <?php } ?>
+          </td>
+        </tr>
 
-        <?php
+      </tbody>
+    </table>
+
+  <?php
   }
 
   /**

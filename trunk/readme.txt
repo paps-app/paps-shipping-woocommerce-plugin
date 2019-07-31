@@ -3,7 +3,7 @@ Contributors: madiodio
 Tags: paps, paps-api, livraison, woocommerce, woocommerce shipping, paps shipping
 Requires at least: 4.0
 Tested up to: 5.0.4
-Stable tag: 1.2.0
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,10 @@ The manual installation method involves downloading the plugin and uploading it 
 
 == Changelog ==
 
+= 1.2.1 =
+
+Mise à jour des dépendances qui affichent des erreurs sur l'inteface utilisateur
+
 = 1.2.0 =
 - Prise en charge automatique des courses Express ou Standard (programmé)- Possibilité de fixer un montant forfaitaire pour toutes les courses,  - Méthode de livraison supporté automatiquement avec Paps Express ou Paps Standard
 - Calcul automatique des tarifs de livraison, mise à jour en temps réél d'une course sur l'espace Admin et utilisateur et plus.
@@ -84,7 +88,7 @@ Release of the first version
 
 == Upgrade Notice ==
 
-Prière de mettre à jour le plugin sur la version 1.2.0 pour profiter des dernières améliorations: prise en charge automatique des courses Express ou Standard (programmé), possibilité de fixer un montant forfaitaire pour toutes les courses, méthode de livraison supporté automatiquement avec Paps Express ou Paps Standard, calcul automatique des tarifs de livraison, mise à jour en temps réél d'une course sur l'espace Admin et utilisateur et plus.
+Prière de mettre à jour le plugin au minimum sur la version 1.2.0 pour profiter des dernières améliorations: prise en charge automatique des courses Express ou Standard (programmé), possibilité de fixer un montant forfaitaire pour toutes les courses, méthode de livraison supporté automatiquement avec Paps Express ou Paps Standard, calcul automatique des tarifs de livraison, mise à jour en temps réél d'une course sur l'espace Admin et utilisateur et plus.
 
 1. Activer ou désactiver les courses express dans les réglages (Woocommerce > Réglages > Expédition > Paps)
 2. Allez dans les configs des méthodes de livraison et choisir soit Paps Express ou Paps Standard
