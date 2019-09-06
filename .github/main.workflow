@@ -12,7 +12,7 @@ action "tag" {
 action "WordPress Plugin Deploy" {
   needs = ["tag"]
   uses = "10up/action-wordpress-plugin-deploy@master"
-  secrets = ["SVN_USERNAME", "SVN_PASSWORD", "SLUG", "ASSETS_DIR"]
+  secrets = ["SVN_USERNAME", "SVN_PASSWORD", "ASSETS_DIR"]
   env = {
     SLUG = "woocommerce-paps"
   }
