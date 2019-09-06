@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Paps Shipping for WooCommerce
 	Description: Paps Shipping & Delivery Tracking Integration for WooCommerce
-	Version: 1.2.4
+	Version: 1.2.5
 	Author: Paps
 	Author URI: www.paps.sn
 */
@@ -59,30 +59,24 @@ class WC_Paps
    */
   private function hooks()
   {
-    add_action('woocommerce_shipping_init', [
-      $this,
-      'paps_woocommerce_shipping_init'
-    ]);
+    add_action('woocommerce_shipping_init', [$this, 'paps_woocommerce_shipping_init']);
+
     add_filter('woocommerce_shipping_methods', [
       $this,
       'paps_woocommerce_shipping_methods'
     ]);
 
-    add_filter(
-      'woocommerce_shipping_calculator_enable_postcode',
-      '__return_false'
-    );
+    add_filter('woocommerce_shipping_methods', [
+      $this,
+      'paps_woocommerce_shipping_methods_2'
+    ]);
+
+    add_filter('woocommerce_shipping_calculator_enable_postcode', '__return_false');
 
     add_action('woocommerce_thankyou', [$this, 'handle_order_status_change']);
-    add_action('woocommerce_order_status_changed', [
-      $this,
-      'handle_order_status_change'
-    ]);
+    add_action('woocommerce_order_status_changed', [$this, 'handle_order_status_change']);
 
-    add_filter('manage_edit-shop_order_columns', [
-      $this,
-      'add_paps_delivery_column'
-    ]);
+    add_filter('manage_edit-shop_order_columns', [$this, 'add_paps_delivery_column']);
     add_action(
       'manage_shop_order_posts_custom_column',
       array($this, 'delivery_status_on_backend'),
@@ -114,7 +108,7 @@ class WC_Paps
    */
   public function paps_woocommerce_shipping_init()
   {
-    require_once 'includes/shipping/class-wc-shipping-paps.php';
+    require_once 'includes/shipping/class-wc-shipping-paps-2.php';
   }
 
   /**
@@ -126,6 +120,12 @@ class WC_Paps
   public function paps_woocommerce_shipping_methods($methods)
   {
     $methods['paps'] = 'WC_Shipping_Paps';
+    return $methods;
+  }
+
+  public function paps_woocommerce_shipping_methods_2($methods)
+  {
+    $methods['paps_express'] = 'WC_Shipping_Paps_Express';
     return $methods;
   }
 
@@ -155,12 +155,12 @@ class WC_Paps
         $paramsPaps = [
           'jobDescription' =>
             'Commande venant du site de' .
-              ' ' .
-              $this->settings['pickup_business_name'] .
-              ' -- Tarif déterminé de la course ' .
-              $order->shipping_total .
-              ' Le mode de payement choisi est ' .
-              $order->payment_method,
+            ' ' .
+            $this->settings['pickup_business_name'] .
+            ' -- Tarif déterminé de la course ' .
+            $order->shipping_total .
+            ' Le mode de payement choisi est ' .
+            $order->payment_method,
           'jobPickupPhone' => $this->settings['pickup_phone_number'],
           'jobPickupName' => $this->settings['pickup_name'],
           'jobPickupAddress' => $this->settings['pickup_address'],
@@ -236,16 +236,15 @@ class WC_Paps
             $order->payment_method;
 
           if ($order->payment_method == "cod") {
-            $paramsPaps['jobAmountToReceive'] = (int) $cost +
-              (int) $product_price * (int) $item["quantity"];
+            $paramsPaps['jobAmountToReceive'] =
+              (int) $cost + (int) $product_price * (int) $item["quantity"];
           } else {
             $paramsPaps['jobAmountToReceive'] = 0;
           }
 
           if ($this->settings['is_express']) {
             $paramsPaps['jobDescription'] =
-              $paramsPaps['jobDescription'] .
-              ' --- La livraison choisie est Express';
+              $paramsPaps['jobDescription'] . ' --- La livraison choisie est Express';
           }
 
           $delivery = wc_paps()
@@ -273,11 +272,7 @@ class WC_Paps
               'paps_delivery_tracking_link',
               $delivery['data']['delivery_tracing_link']
             );
-            update_post_meta(
-              $order_id,
-              'paps_task_status',
-              'sent_but_not_started'
-            );
+            update_post_meta($order_id, 'paps_task_status', 'sent_but_not_started');
           } else {
             wp_mail(
               get_option('admin_email'),
@@ -286,9 +281,7 @@ class WC_Paps
             );
           }
 
-          wc_paps()->debug(
-            'Delivery submitted with this parameters: ' . $paramsPaps
-          );
+          wc_paps()->debug('Delivery submitted with this parameters: ' . $paramsPaps);
 
           wc_paps()->debug('Paps response: ' . $delivery);
         }
@@ -327,9 +320,7 @@ class WC_Paps
           wc_paps()->debug(
             'Canceling Delivery with ID: ' . $pickup_id . ' ' . $delivery_id
           );
-          wc_paps()->debug(
-            'Delivery cancellation response: ' . $task_cancellation
-          );
+          wc_paps()->debug('Delivery cancellation response: ' . $task_cancellation);
         }
 
         if (!is_wp_error($task_cancellation)) {
@@ -396,9 +387,7 @@ class WC_Paps
     $pickupStatus = $pickupTask['data'][0]['job_status'];
     $dropoffStatus = $deliveryTask['data'][0]['job_status'];
 
-    wc_paps()->debug(
-      'Is already in transit: ' . $pickupStatus . ' ' . $dropoffStatus
-    );
+    wc_paps()->debug('Is already in transit: ' . $pickupStatus . ' ' . $dropoffStatus);
 
     if (
       $pickupStatus == 1 ||
@@ -447,11 +436,7 @@ class WC_Paps
           $dropoffStatus != 2
         ) {
           $deliveryStatusCode = "pickup_completed";
-        } elseif (
-          $dropoffStatus == 0 ||
-          $dropoffStatus == 1 ||
-          $dropoffStatus == 4
-        ) {
+        } elseif ($dropoffStatus == 0 || $dropoffStatus == 1 || $dropoffStatus == 4) {
           $deliveryStatusCode = "dropoff_started";
         } elseif ($dropoffStatus == 2) {
           $deliveryStatusCode = "dropoff_completed";
@@ -497,7 +482,13 @@ class WC_Paps
     $shipping_method = @array_shift($order->get_shipping_methods());
     $shipping_method_id = $shipping_method['method_id'];
 
-    if ($shipping_method_id !== 'paps') {
+    // if ($shipping_method_id !== 'paps_express') {
+    //   wc_paps()->debug('shipping_method_id: ' . print_r($shipping_method));
+    //   return;
+    // }
+
+    if ($shipping_method_id !== 'paps_express' || $shipping_method_id !== 'paps') {
+      wc_paps()->debug('shipping_method_id: ' . print_r($shipping_method));
       return;
     }
 
@@ -508,16 +499,12 @@ class WC_Paps
       ->getDeliveryStatus($delivery_status);
 
     if (!$text_status) {
-      $text_status = 'Aucune information disponible pour le moment';
+      $text_status = 'La commande est bien transmise. La livraison ne devrait pas tarder à commencer.';
     } else {
       update_post_meta($order->id, 'paps_task_status', $delivery_status);
     }
 
-    $pickup_tracking_link = get_post_meta(
-      $order->id,
-      'paps_pickup_tracking_link',
-      true
-    );
+    $pickup_tracking_link = get_post_meta($order->id, 'paps_pickup_tracking_link', true);
     $delivery_tracking_link = get_post_meta(
       $order->id,
       'paps_delivery_tracking_link',
@@ -544,12 +531,12 @@ class WC_Paps
     <table class="shop_table paps_delivery">
       <tbody>
         <tr>
-          <th>Shipping method:</th>
+          <th>Méthode de livraison:</th>
           <td><?php echo $shipping_method['name']; ?></td>
         </tr>
 
         <tr>
-          <th>Delivery status:</th>
+          <th>Statut de la livraison:</th>
           <td><?php echo $text_status; ?>
             <?php if ($tracking_link) { ?>
               <a target="_blank" href="<?php echo $tracking_link; ?>"> Cliquez ici</a> pour suivre la course.
