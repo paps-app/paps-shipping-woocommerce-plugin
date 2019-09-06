@@ -14,6 +14,6 @@ action "WordPress Plugin Deploy" {
   uses = "10up/action-wordpress-plugin-deploy@master"
   secrets = ["SVN_USERNAME", "SVN_PASSWORD", "ASSETS_DIR"]
   env = {
-    SLUG = "woocommerce-paps"
+    SLUG = "paps-shipping-for-woocommerce"
   }
 }
