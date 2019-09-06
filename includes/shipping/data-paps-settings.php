@@ -108,6 +108,16 @@ return array(
     ),
     'default' => ''
   ),
+  'is_packs_enabled' => array(
+    'title' => __('Courses avec Packs achetés', 'paps-wc'),
+    'type' => 'checkbox',
+    'label' => __('Activé', 'paps-wc'),
+    'description' => __(
+      'Lorsque activée, cette option permet aux client de pouvoir choisir lui-même le mode de livraison Express ou Programmé (Standard) avec une tarification fixe. Note: vous devez forcément acheter un pack auprès du service commercial.',
+      'paps-wc'
+    ),
+    'default' => 'no'
+  ),
   'flat_rate' => array(
     'title' => __('Montant forfait pour toutes les courses', 'paps-wc'),
     'type' => 'number',
@@ -116,16 +126,6 @@ return array(
       'paps-wc'
     ),
     'default' => ''
-  ),
-  'is_express' => array(
-    'title' => __('Courses Express', 'paps-wc'),
-    'type' => 'checkbox',
-    'label' => __('Activé', 'paps-wc'),
-    'description' => __(
-      'Aussi cette option, toutes les courses seront prises en charge par Paps dès reçues et les frais de la course seront majorés d\'un montant forfaitaire',
-      'paps-wc'
-    ),
-    'default' => 'no'
   ),
   'signature_secret_key' => array(
     'title' => __('Clé de Signature Secrète', 'paps-wc'),
