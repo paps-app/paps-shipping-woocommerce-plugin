@@ -19,10 +19,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
     $this->id = 'paps';
     $this->instance_id = absint($instance_id);
 
-    $method_title =
-      $this->get_option('is_express') == "yes"
-        ? __('Paps (Express)', 'paps-wc')
-        : __('Paps (Standard)', 'paps-wc');
+    $method_title = __('Paps (Standard)', 'paps-wc');
 
     $this->method_title = $method_title;
     $this->method_description = __('Paps Shipping Support', 'paps-wc');
@@ -46,12 +43,8 @@ class WC_Shipping_Paps extends WC_Shipping_Method
     $this->init_form_fields();
     $this->init_settings();
 
-    $title =
-      $this->get_option('is_express') == "yes"
-        ? __('Paps (Express)', 'paps-wc')
-        : __('Paps (Standard)', 'paps-wc');
+    $this->title = __('Livraison Standard (Paps)', 'paps-wc');
 
-    $this->title = $title;
     $this->api_key = $this->get_option('api_key');
     $this->signature_secret_key = $this->get_option('signature_secret_key');
 
@@ -82,7 +75,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
    */
   public function init_form_fields()
   {
-    $this->form_fields = include 'data-paps-settings.php';
+    $this->form_fields = include 'data-paps-settings-standard.php';
   }
 
   /**

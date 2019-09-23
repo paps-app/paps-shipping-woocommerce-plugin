@@ -36,7 +36,7 @@ $delivery_cancellation_statuses = array_filter(
  */
 return array(
   'enabled' => array(
-    'title' => __('Expédition avec Paps', 'paps-wc'),
+    'title' => __('Expédition avec Paps Standard', 'paps-wc'),
     'type' => 'checkbox',
     'label' => __('Activé', 'paps-wc'),
     'default' => 'no'
@@ -111,7 +111,7 @@ return array(
   'is_packs_enabled' => array(
     'title' => __('Courses avec Packs achetés', 'paps-wc'),
     'type' => 'checkbox',
-    'label' => __('Activé', 'paps-wc'),
+    'label' => __('Activé', ' '),
     'desc_tip' => true,
     'description' => __(
       'Lorsque activée, cette option permet aux client de pouvoir choisir lui-même le mode de livraison Express ou Programmé (Standard) avec une tarification fixe. Note: vous devez forcément acheter un pack auprès du service commercial.',

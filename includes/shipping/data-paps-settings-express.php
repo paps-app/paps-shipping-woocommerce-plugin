@@ -36,7 +36,7 @@ $delivery_cancellation_statuses = array_filter(
  */
 return array(
   'enabled' => array(
-    'title' => __('Expédition avec Paps', 'paps_express-wc'),
+    'title' => __('Expédition avec Paps Express', 'paps_express-wc'),
     'type' => 'checkbox',
     'label' => __('Activé', 'paps_express-wc'),
     'default' => 'no'
