@@ -119,21 +119,34 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         // $weight = $weight + $_product->get_weight() * $values['quantity'];
 
         if (
-          empty($package['destination']['address']) ||
-          empty($package['destination']['city'])
+          !$package['destination']['city'] ||
+          !$package['destination']['state']
         ) {
           return wc_paps()->debug(
-            "Il n'y a aucune adresse saisie lors de la commande, veuillez renseigner ce champs afin qu'on  puisse tarifer la livraison de votre colis",
+            "Il n'y a aucune adresse saisie lors de la commande, veuillez renseigner ce champs afin qu'on puisse calculer le tarif de la livraison de votre colis",
             true
           );
-        } else {
+        }
+        //  elseif (empty($package['destination']['address'])) {
+        //   # code...
+        // }
+        else {
           $package_size = $this->get_package_size($weight);
           $dropoff_address =
             $package['destination']['address'] .
             ',' .
             $package['destination']['city'] .
             ',' .
-            $package['destination']['country'];
+            $package['destination']['state'];
+
+          if (
+            !contains("Sénégal", $dropoff_address) &&
+            $package['destination']['country'] == "SN"
+          ) {
+            $dropoff_address = $dropoff_address . ", Senegal";
+          }
+
+          // wc_paps()->debug('Destination: ' . print_r($dropoff_address, 1));
         }
       }
 
