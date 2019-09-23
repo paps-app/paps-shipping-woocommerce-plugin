@@ -71,8 +71,6 @@ class WC_Shipping_Paps extends WC_Shipping_Method
 
     $this->logging_enabled = $this->get_option('logging_enabled');
 
-    $this->is_express = $this->get_option('is_express');
-
     add_action('woocommerce_update_options_shipping_' . $this->id, [
       $this,
       'process_admin_options'

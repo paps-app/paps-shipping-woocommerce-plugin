@@ -1,0 +1,10 @@
+{
+  "overrides": [
+    {
+      "files": ["paps-shipping-for-woocommerce.php", "includes/**/*.php"],
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}
