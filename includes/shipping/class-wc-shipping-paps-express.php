@@ -67,7 +67,7 @@ class WC_Shipping_Paps_Express extends WC_Shipping_Method
    */
   public function init_form_fields()
   {
-    $this->form_fields = include 'data-paps-settings.php';
+    $this->form_fields = include 'data-paps-settings-express.php';
   }
 
   public function calculate_shipping($package = [])
