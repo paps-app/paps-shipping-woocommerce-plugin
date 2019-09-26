@@ -3,7 +3,7 @@ Contributors: madiodio
 Tags: paps, paps-api, livraison, woocommerce, woocommerce shipping, paps shipping
 Requires at least: 4.0
 Tested up to: 5.2.3
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,10 @@ In the search field type “WooCommerce Paps Integration” and click Search Plu
 The manual installation method involves downloading the plugin and uploading it to your webserver via your favourite FTP application. The WordPress codex contains [instructions on how to do this here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
 == Changelog ==
+
+= 1.3.1 =
+
+Régler le problème du loader qui se bloque sur la page de checkout de la commande lorsque l'utilisateur change un champ qui déclenche le ajax update. (Urgh, ça a duré celui)
 
 = 1.2.1 =
 
