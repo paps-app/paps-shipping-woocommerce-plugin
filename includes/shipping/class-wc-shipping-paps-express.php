@@ -72,7 +72,6 @@ class WC_Shipping_Paps_Express extends WC_Shipping_Method
 
   public function calculate_shipping($package = [])
   {
-    // wc_paps()->debug('Packs enabled express: ' . print_r($this->is_packs_enabled));
     if (
       isset($this->flat_rate) &&
       !empty($this->flat_rate) &&
@@ -147,8 +146,6 @@ class WC_Shipping_Paps_Express extends WC_Shipping_Method
           ) {
             $dropoff_address = $dropoff_address . ", Senegal";
           }
-
-          // wc_paps()->debug('Destination: ' . print_r($dropoff_address, 1));
         }
       }
 
@@ -163,15 +160,7 @@ class WC_Shipping_Paps_Express extends WC_Shipping_Method
         ->api()
         ->getQuote($quoteRequestParams);
 
-      wc_paps()->debug(
-        'Requested a quote and here is the response: ' .
-          $quoteRequestParams .
-          $quote
-      );
-
       $cost = $quote['data']['quote'];
-
-      wc_paps()->debug('Coût: ' . $cost);
 
       if (
         isset($this->added_flat_rate) &&

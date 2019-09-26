@@ -138,8 +138,6 @@ class WC_Shipping_Paps extends WC_Shipping_Method
           ) {
             $dropoff_address = $dropoff_address . ", Senegal";
           }
-
-          // wc_paps()->debug('Destination: ' . print_r($dropoff_address, 1));
         }
       }
 
@@ -156,11 +154,6 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       $quote = wc_paps()
         ->api()
         ->getQuote($quoteRequestParams);
-
-      wc_paps()->debug(
-        'Requested a quote and here is the response: ' .
-          print_r($quoteRequestParams . $quote)
-      );
 
       $cost = $quote['data']['quote'];
 
