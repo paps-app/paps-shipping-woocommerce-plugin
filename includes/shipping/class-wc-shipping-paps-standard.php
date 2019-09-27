@@ -53,7 +53,9 @@ class WC_Shipping_Paps extends WC_Shipping_Method
     $this->pickup_address = $this->get_option('pickup_address');
     $this->pickup_phone_number = $this->get_option('pickup_phone_number');
     $this->flat_rate = $this->get_option('flat_rate');
+    $this->added_flat_rate = $this->get_option("added_flat_rate");
     $this->pickup_notes = $this->get_option('pickup_notes');
+    $this->is_packs_enabled = $this->get_option('is_packs_enabled');
 
     $this->delivery_submission = $this->get_option('delivery_submission');
     $this->delivery_cancellation = $this->get_option('delivery_cancellation');
@@ -94,6 +96,27 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         'id' => $this->id,
         'label' => $this->title,
         'cost' => $this->flat_rate,
+        'calc_tax' => 'box_packing'
+      );
+
+      $this->add_rate($rate);
+    } elseif (
+      isset($this->is_packs_enabled) &&
+      $this->is_packs_enabled == "yes"
+    ) {
+      $cost = 1250;
+      if (
+        isset($this->added_flat_rate) &&
+        !empty($this->added_flat_rate) &&
+        is_numeric($this->added_flat_rate)
+      ) {
+        $cost = $cost + (int) $this->added_flat_rate;
+      }
+
+      $rate = array(
+        'id' => $this->id,
+        'label' => $this->title,
+        'cost' => $cost,
         'calc_tax' => 'box_packing'
       );
 
@@ -156,6 +179,14 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         ->getQuote($quoteRequestParams);
 
       $cost = $quote['data']['quote'];
+
+      if (
+        isset($this->added_flat_rate) &&
+        !empty($this->added_flat_rate) &&
+        is_numeric($this->added_flat_rate)
+      ) {
+        $cost = $cost + $this->added_flat_rate;
+      }
 
       if (!is_wp_error($quote)) {
         $rate = array(

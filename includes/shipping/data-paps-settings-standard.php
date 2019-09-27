@@ -62,12 +62,11 @@ return array(
   //   'default' => __('Forfait', 'paps-wc'),
   //   'desc_tip' => true
   // ),
-
   'api_key' => array(
     'title' => __('Clé API', 'paps-wc'),
     'type' => 'text',
     'description' => __(
-      'Le clé API vous a été envoyée dans l\'email de confirmation',
+      'Le clé API vous a été envoyée dans l\'email de confirmation après l\'avoir obtenue sur https://developers.paps.sn',
       'paps-wc'
     ),
     'default' => ''
@@ -123,7 +122,7 @@ return array(
     'title' => __('Frais en supplément', 'paps-wc'),
     'type' => 'number',
     'description' => __(
-      'Montant fixe s\'ajoutant aux frais de livraison calculé par Paps.',
+      'Montant fixe s\'ajoutant aux frais de livraison calculés par Paps.',
       'paps-wc'
     ),
     'default' => ''

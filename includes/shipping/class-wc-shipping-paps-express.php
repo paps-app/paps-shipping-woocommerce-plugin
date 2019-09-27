@@ -44,6 +44,7 @@ class WC_Shipping_Paps_Express extends WC_Shipping_Method
     $this->pickup_address = $this->get_option('pickup_address');
     $this->pickup_phone_number = $this->get_option('pickup_phone_number');
     $this->flat_rate = $this->get_option('flat_rate');
+    $this->added_flat_rate = $this->get_option("added_flat_rate");
     $this->is_packs_enabled = $this->get_option('is_packs_enabled');
     $this->pickup_notes = $this->get_option('pickup_notes');
 

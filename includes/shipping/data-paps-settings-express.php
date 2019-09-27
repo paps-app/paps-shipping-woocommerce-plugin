@@ -67,8 +67,7 @@ return array(
     'title' => __('Clé API', 'paps_express-wc'),
     'type' => 'text',
     'description' => __(
-      'Le clé API vous a été envoyée dans l\'email de confirmation',
-      'paps_express-wc'
+      'Le clé API vous a été envoyée dans l\'email de confirmation après l\'avoir obtenue sur https://developers.paps.sn',
     ),
     'default' => ''
   ),
@@ -123,7 +122,7 @@ return array(
     'title' => __('Frais en supplément', 'paps_express-wc'),
     'type' => 'number',
     'description' => __(
-      'Montant fixe s\'ajoutant aux frais de livraison calculé par Paps.',
+      'Montant fixe s\'ajoutant aux frais de livraison calculés par Paps.',
       'paps_express-wc'
     ),
     'default' => ''
