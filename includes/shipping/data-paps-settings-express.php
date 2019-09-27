@@ -68,6 +68,7 @@ return array(
     'type' => 'text',
     'description' => __(
       'Le clé API vous a été envoyée dans l\'email de confirmation après l\'avoir obtenue sur https://developers.paps.sn',
+      'paps_express-wc'
     ),
     'default' => ''
   ),
