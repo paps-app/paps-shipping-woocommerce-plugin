@@ -18,5 +18,5 @@ jobs:
         env:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          ASSETS_DIR: ${{ secrets.SVN_USERNAME }}
+          ASSETS_DIR: ${{ secrets.ASSETS_DIR }}
           SLUG: paps-shipping-for-woocommerce
