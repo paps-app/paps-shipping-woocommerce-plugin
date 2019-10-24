@@ -89,7 +89,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
   {
     if (
       isset($this->flat_rate) &&
-      !empty($this->flat_rate) &&
+      // !empty($this->flat_rate) &&
       is_numeric($this->flat_rate)
     ) {
       $rate = array(
