@@ -699,7 +699,7 @@ class WC_Paps
       <?php
     // }
     // }
-    ?>
+    ?> <?php
   }
 
   /**
