@@ -3,7 +3,7 @@ Contributors: madiodio
 Tags: paps, paps-api, livraison, woocommerce, woocommerce shipping, paps shipping
 Requires at least: 4.0
 Tested up to: 5.2.3
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,9 +75,12 @@ The manual installation method involves downloading the plugin and uploading it 
 
 == Changelog ==
 
+= 1.3.5 =
+Ajout des détails de la livraison dans le corps de l'email. A noter que cela ne prend les liens de tracking que lorque vous déclenchez l'envoi d'email de la facture pour le moment.
+
 = 1.3.1 =
 
-Régler le problème du loader qui se bloque sur la page de checkout de la commande lorsque l'utilisateur change un champ qui déclenche le ajax update. (Urgh, ça a duré celui)
+Régler le problème du loader qui se bloque sur la page de checkout de la commande lorsque l'utilisateur change un champ qui déclenche le ajax update. (Argh, ça a duré celui-là .)
 
 = 1.2.1 =
 
