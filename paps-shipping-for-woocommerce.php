@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Paps Shipping for WooCommerce
 	Description: Paps Shipping & Delivery Tracking Integration for WooCommerce
-	Version: 1.3.4
+	Version: 1.3.5
 	Author: Paps
 	Author URI: www.paps.sn
 */
