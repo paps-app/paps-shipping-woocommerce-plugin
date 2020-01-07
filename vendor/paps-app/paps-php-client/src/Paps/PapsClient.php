@@ -9,7 +9,7 @@ class PapsClient
   /**
    * API Base URL
    */
-  const API_BASE_PATH = 'https://cv6j22quq0.execute-api.eu-west-3.amazonaws.com/prod/api/v1/';
+  const API_BASE_PATH = 'https://api.paps.sn/api/';
 
   /**
    * API Version
