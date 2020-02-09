@@ -107,16 +107,64 @@ return array(
     ),
     'default' => ''
   ),
-  'is_packs_enabled' => array(
-    'title' => __('Courses avec Packs achetés', 'paps-wc'),
-    'type' => 'checkbox',
-    'label' => __('Activé', ' '),
-    'desc_tip' => true,
-    'description' => __(
-      'Lorsque activée, cette option permet aux client de pouvoir choisir lui-même le mode de livraison Express ou Programmé (Standard) avec une tarification fixe. Note: vous devez forcément acheter un pack auprès du service commercial.',
+  'email_monespace_account' => array(
+    'title' => __(
+      'Adresse email enregistré sur votre compte Monespace',
       'paps-wc'
     ),
-    'default' => 'no'
+    'type' => 'text',
+    'description' => __(
+      'Optionnel, Renseignez ce champs si vous souhaitez suivre les commandes votre compte sur votre espace client, Monespace',
+      'paps-wc'
+    ),
+    'default' => ''
+  ),
+  // 'is_packs_enabled' => array(
+  //   'title' => __('Courses avec Packs achetés', 'paps-wc'),
+  //   'type' => 'checkbox',
+  //   'label' => __('Activé', ' '),
+  //   'desc_tip' => true,
+  //   'description' => __(
+  //     'Lorsque activée, cette option permet aux client de pouvoir choisir lui-même le mode de livraison Express ou Programmé (Standard) avec une tarification fixe. Note: vous devez forcément acheter un pack auprès du service commercial.',
+  //     'paps-wc'
+  //   ),
+  //   'default' => 'no'
+  // ),
+  'delivery_submission' => array(
+    'title' => __(
+      'Envoyer la requête à Paps quand la commande à l\'état suivant:',
+      'paps-wc'
+    ),
+    'type' => 'select',
+    'description' => __(
+      'Quand la commande est mise dans cet état, la requête est envoyée immédiatement à Paps',
+      'paps-wc'
+    ),
+    'default' => '',
+    'options' => array(
+      'pending' => _x('Payement en attente', 'paps-wc'),
+      'processing' => _x('En cours', 'paps-wc'),
+      'on-hold' => _x('En pause', 'paps-wc'),
+      'completed' => _x('Terminé', 'paps-wc')
+    ),
+    'desc_tip' => true
+  ),
+  'delivery_cancellation' => array(
+    'title' => __(
+      'Annuler la requête à Paps quand la commande est à l\'état suivant:',
+      'paps-wc'
+    ),
+    'type' => 'select',
+    'description' => __(
+      'Quand la commande est mise dans cet état, la requête est annulée immédiatement à Paps',
+      'paps-wc'
+    ),
+    'default' => '',
+    'options' => array(
+      'cancelled' => _x('Annulé', 'paps-wc'),
+      'failed' => _x('Echec', 'paps-wc')
+    ),
+    'desc_tip' => true
   ),
   'added_flat_rate' => array(
     'title' => __('Frais en supplément', 'paps-wc'),
@@ -154,42 +202,6 @@ return array(
       'paps-wc'
     ),
     'default' => ''
-  ),
-  'delivery_submission' => array(
-    'title' => __(
-      'Envoyer la requête à Paps quand la commande à l\'état suivant:',
-      'paps-wc'
-    ),
-    'type' => 'select',
-    'description' => __(
-      'Quand la commande est mise dans cet état, la requête est envoyée immédiatement à Paps',
-      'paps-wc'
-    ),
-    'default' => '',
-    'options' => array(
-      'pending' => _x('Payement en attente', 'paps-wc'),
-      'processing' => _x('En cours', 'paps-wc'),
-      'on-hold' => _x('En pause', 'paps-wc'),
-      'completed' => _x('Terminé', 'paps-wc')
-    ),
-    'desc_tip' => true
-  ),
-  'delivery_cancellation' => array(
-    'title' => __(
-      'Annuler la requête à Paps quand la commande est à l\'état suivant:',
-      'paps-wc'
-    ),
-    'type' => 'select',
-    'description' => __(
-      'Quand la commande est mise dans cet état, la requête est annulée immédiatement à Paps',
-      'paps-wc'
-    ),
-    'default' => '',
-    'options' => array(
-      'cancelled' => _x('Annulé', 'paps-wc'),
-      'failed' => _x('Echec', 'paps-wc')
-    ),
-    'desc_tip' => true
   ),
   'debug' => array(
     'title' => __('Mode Debug', 'paps-wc'),

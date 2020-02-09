@@ -128,6 +128,8 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       $pickup_adress = $this->get_option('pickup_address');
       $dropoff_address = null;
 
+      // wc_paps()->debug('Currency: ' . print_r(get_option('woocommerce_currency')));
+
       foreach ($package['contents'] as $item_id => $values) {
         $_product = $values['data'];
         $weight = $_product->get_weight() * $values['quantity'];
@@ -179,6 +181,11 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         ->getQuote($quoteRequestParams);
 
       $cost = $quote['data']['quote'];
+
+      if (get_option('woocommerce_currency') == "EUR") {
+        $cost = $cost / 655;
+        $cost = number_format((float) $cost, 2, '.', '');
+      }
 
       if (
         isset($this->added_flat_rate) &&
