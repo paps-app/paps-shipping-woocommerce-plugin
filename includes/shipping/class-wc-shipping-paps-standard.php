@@ -131,10 +131,10 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       // wc_paps()->debug('Currency: ' . print_r(get_option('woocommerce_currency')));
 
       foreach ($package['contents'] as $item_id => $values) {
-	$item_weight = $_product->get_weight() || 1;
-	$quantity = $values['quantity'] || 1;
-	      
         $_product = $values['data'];
+
+        $quantity = $values['quantity'] || 1;
+        $item_weight = $_product->get_weight() || 1;
         $weight = $item_weight * $quantity;
         // $product_id = $_product->get_id();
         // $weight = $weight + $_product->get_weight() * $values['quantity'];
