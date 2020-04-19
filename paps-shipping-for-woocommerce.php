@@ -101,12 +101,6 @@ class WC_Paps
       20
     );
 
-    add_action(
-      'woocommerce_email_after_order_table',
-      [$this, 'show_delivery_details_on_order_on_email'],
-      20
-    );
-
     // add_action(
     //   'woocommerce_checkout_update_order_review',
     //   array($this, 'action_woocommerce_checkout_update_order_review'),
@@ -603,103 +597,6 @@ class WC_Paps
     </table>
 
   <?php
-  }
-
-  /**
-   * Show shipping information on order view
-   *
-   * @param $order
-   */
-  public function show_delivery_details_on_order_on_email(
-    $order,
-    $sent_to_admin
-  ) {
-    $shipping_method = @array_shift($order->get_shipping_methods());
-    $shipping_method_id = $shipping_method['method_id'];
-
-    // if ($shipping_method_id !== 'paps_express') {
-    //   wc_paps()->debug('shipping_method_id: ' . print_r($shipping_method));
-    //   return;
-    // }
-
-    if (
-      !($shipping_method_id == 'paps') &&
-      !($shipping_method_id == 'paps_express')
-    ) {
-      /* ?> <?php echo '<pre>', print_r($shipping_method_id, 1), '</pre>'; ?> <?php */
-      return;
-    }
-
-    // if (!$sent_to_admin) {
-    $delivery_status = wc_paps()->get_task_delivery_status_code($order->id);
-
-    $text_status = wc_paps()
-      ->api()
-      ->getDeliveryStatus($delivery_status);
-
-    wc_paps()->debug("Look out!!!" . $delivery_status . $text_status, true);
-
-    if (!$text_status) {
-      $text_status =
-        'La commande est bien transmise. La livraison ne devrait pas tarder à commencer.';
-    } else {
-      update_post_meta($order->id, 'paps_task_status', $delivery_status);
-    }
-
-    $pickup_tracking_link = get_post_meta(
-      $order->id,
-      'paps_pickup_tracking_link',
-      true
-    );
-    $delivery_tracking_link = get_post_meta(
-      $order->id,
-      'paps_delivery_tracking_link',
-      true
-    );
-    $tracking_link = null;
-
-    if ($delivery_status) {
-      if (
-        $delivery_status == "sent_but_not_started" ||
-        $delivery_status == "pickup_started"
-      ) {
-        $tracking_link = $pickup_tracking_link;
-      } else {
-        $tracking_link = $delivery_tracking_link;
-      }
-    }
-
-    # code...
-    ?>
-  
-        <div style="margin-bottom: 40px">
-          <h2>Expédition</h2>
-      
-          <table style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;width: 100%;font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif">
-            <tbody>
-              <tr>
-                <th style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">Livraison par:</th>
-                <td style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left"><?php echo $shipping_method[
-                  'name'
-                ]; ?></td>
-              </tr>
-              <tr>
-                <th style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">Statut de la livraison:</th>
-                <td style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left"><?php echo $text_status; ?>
-                  <?php if ($tracking_link) { ?>
-                    <a target="_blank" href="<?php echo $tracking_link; ?>"> Cliquez ici</a> pour suivre la course.
-      
-                  <?php } ?>
-                </td>
-              </tr>
-      
-            </tbody>
-          </table>
-        </div>
-      <?php
-    // }
-    // }
-    ?> <?php
   }
 
   /**
