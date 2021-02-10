@@ -60,8 +60,8 @@ Visitez la documentation officielle sur https://developers.paps.sn
 
 = Minimum Requirements =
 
-* WooCommerce 2.2 or later
-* WordPress 4.0 or later
+* WooCommerce 4.9 or later
+* WordPress 5.6 or later
 
 = Automatic installation =
 
@@ -95,7 +95,7 @@ Release of the first version
 
 == Upgrade Notice ==
 
-Prière de mettre à jour le plugin au minimum sur la version 1.2.0 pour profiter des dernières améliorations: prise en charge automatique des courses Express ou Standard (programmé), possibilité de fixer un montant forfaitaire pour toutes les courses, méthode de livraison supporté automatiquement avec Paps Express ou Paps Standard, calcul automatique des tarifs de livraison, mise à jour en temps réél d'une course sur l'espace Admin et utilisateur et plus.
+Prière de mettre à jour le plugin au minimum sur la version 2.0 pour profiter des dernières améliorations: prise en charge automatique des courses Express ou Standard (programmé), possibilité de fixer un montant forfaitaire pour toutes les courses, méthode de livraison supporté automatiquement avec Paps Express ou Paps Standard, calcul automatique des tarifs de livraison, mise à jour en temps réél d'une course sur l'espace Admin et utilisateur et plus.
 
 1. Activer ou désactiver les courses express dans les réglages (Woocommerce > Réglages > Expédition > Paps)
 2. Allez dans les configs des méthodes de livraison et choisir soit Paps Express ou Paps Standard

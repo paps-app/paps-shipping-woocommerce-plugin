@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Paps Shipping for WooCommerce
 	Description: Paps Shipping & Delivery Tracking Integration for WooCommerce
-	Version: 1.4.3
+	Version: 2.0
 	Author: Paps
 	Author URI: www.paps.sn
 */
@@ -63,14 +63,13 @@ class WC_Paps
       $this,
       'paps_woocommerce_shipping_init'
     ]);
-
-    add_filter('woocommerce_shipping_methods', [
+	  add_filter('woocommerce_shipping_methods', [
       $this,
-      'paps_woocommerce_shipping_methods_express'
+      'paps_woocommerce_shipping_methods_standard'
     ]);
     add_filter('woocommerce_shipping_methods', [
       $this,
-      'paps_woocommerce_shipping_methods_standard'
+      'paps_woocommerce_shipping_methods_express'
     ]);
 
     add_filter(
@@ -100,13 +99,6 @@ class WC_Paps
       array($this, 'show_delivery_details_on_order'),
       20
     );
-
-    // add_action(
-    //   'woocommerce_checkout_update_order_review',
-    //   array($this, 'action_woocommerce_checkout_update_order_review'),
-    //   10,
-    //   2
-    // );
   }
 
   /**
@@ -162,7 +154,6 @@ class WC_Paps
   public function handle_order_status_change($order_id)
   {
     $order = new WC_Order($order_id);
-    // $product = new WC_Product();
 
     $items = $order->get_items();
 
@@ -196,14 +187,6 @@ class WC_Paps
           'customerAddress' => $dropoff_address,
           'customerPhone' => $order->billing_phone
         ];
-
-        //   if (!empty($order->customer_note)) {
-        //     $paramsPaps['jobDescription'] =
-        //       $paramsPaps['jobDescription'] .
-        //       '. Notes du client à livrer: ' .
-        //       $order->customer_note;
-        //   }
-
         if (!empty($order->shipping_city)) {
           $paramsPaps['customerAddress'] =
             $paramsPaps['customerAddress'] . ', ' . $order->shipping_city;
@@ -236,7 +219,7 @@ class WC_Paps
               ->api()
               ->getQuote(array(
                 'origin' => $this->settings['pickup_address'],
-                'destination' => $dropoff_address,
+                'destination'|| $pt => $dropoff_address,
                 'packageSize' => $package_size
               ));
 
@@ -394,16 +377,16 @@ class WC_Paps
 
   public function get_package_size($weight)
   {
-    $package_size = null;
+    $package_size = "small";
     if ($weight > 5 && $weight < 30) {
       $package_size = "medium";
-    } elseif ($weight > 30 && $weight < 60) {
+    } elseif ($weight >= 30 && $weight < 60) {
       $package_size = "large";
-    } elseif ($weight > 60 && $weight < 100) {
+    } elseif ($weight >= 60 && $weight < 100) {
       $package_size = "xLarge";
-    } else {
-      $package_size = "small";
-    }
+    } elseif ($weight >= 100) {
+	  $package_size = "xxLarge";
+	}
     return $package_size;
   }
 
