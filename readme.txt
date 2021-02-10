@@ -1,5 +1,5 @@
 === Paps Integration for WooCommerce ===
-Contributors: madiodio 
+Contributors: kiamet
 Tags: paps, paps-api, livraison, woocommerce, woocommerce shipping, paps shipping
 Requires at least: 4.0
 Tested up to: 5.2.3
