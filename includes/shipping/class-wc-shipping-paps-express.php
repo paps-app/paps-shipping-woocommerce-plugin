@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Adds Paps EXpress Shipping functionality
+ * Adds Paps EXpress Shipping functionality 
  *
  * Class WC_Shipping_Paps_Express
  */
@@ -185,20 +185,21 @@ class WC_Shipping_Paps_Express extends WC_Shipping_Method
     }
   }
 
-  public function get_package_size($weight)
+   public function get_package_size($weight)
   {
-    $package_size = null;
+    $package_size = "small";
     if ($weight > 5 && $weight < 30) {
       $package_size = "medium";
-    } elseif ($weight > 30 && $weight < 60) {
+    } elseif ($weight >= 30 && $weight < 60) {
       $package_size = "large";
-    } elseif ($weight > 60 && $weight < 100) {
+    } elseif ($weight >= 60 && $weight < 100) {
       $package_size = "xLarge";
-    } else {
-      $package_size = "small";
-    }
+    } elseif ($weight >= 100) {
+	  $package_size = "xxLarge";
+	}
     return $package_size;
   }
+
 
   /**
    * Check if settings are not empty
@@ -236,7 +237,7 @@ class WC_Shipping_Paps_Express extends WC_Shipping_Method
   }
 }
 
-function contains($needle, $haystack)
+/*function contains($needle, $haystack)
 {
   return strpos($haystack, $needle) !== false;
-}
+}*/
