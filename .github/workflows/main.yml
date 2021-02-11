@@ -1,6 +1,5 @@
  name: WordPress Org Deploy
   
-  uses: varunsridharan/action-wp-org-deploy@883e1a79b989a71d16dd947ae4ed0fdacc4d73dd 
   uses: varunsridharan/action-wp-org-deploy@1.3
   with:
     
