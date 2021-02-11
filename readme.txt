@@ -75,6 +75,9 @@ The manual installation method involves downloading the plugin and uploading it 
 
 == Changelog ==
 
+=2.0=
+Réglage du problème de prix standard, compatibilité avec d'autres extensions.
+
 = 1.3.5 =
 Ajout des détails de la livraison dans le corps de l'email. A noter que cela ne prend les liens de tracking que lorque vous déclenchez l'envoi d'email de la facture pour le moment.
 
@@ -95,7 +98,7 @@ Release of the first version
 
 == Upgrade Notice ==
 
-Prière de mettre à jour le plugin au minimum sur la version 2.0 pour profiter des dernières améliorations: prise en charge automatique des courses Express ou Standard (programmé), possibilité de fixer un montant forfaitaire pour toutes les courses, méthode de livraison supporté automatiquement avec Paps Express ou Paps Standard, calcul automatique des tarifs de livraison, mise à jour en temps réél d'une course sur l'espace Admin et utilisateur et plus.
+Prière de mettre à jour le plugin sur la version 2.0 pour profiter des dernières améliorations: prise en charge automatique des courses Express ou Standard (programmé), possibilité de fixer un montant forfaitaire pour toutes les courses, méthode de livraison supporté automatiquement avec Paps Express ou Paps Standard, calcul automatique des tarifs de livraison, mise à jour en temps réél d'une course sur l'espace Admin et utilisateur et plus.
 
 1. Activer ou désactiver les courses express dans les réglages (Woocommerce > Réglages > Expédition > Paps)
 2. Allez dans les configs des méthodes de livraison et choisir soit Paps Express ou Paps Standard
