@@ -1,6 +1,6 @@
  name: WordPress Org Deploy
   
-  uses: varunsridharan/action-wp-org-deploy@1.3
+  uses: kiamet/action-wp-org-deploy@1.3
   with:
     
     WORDPRESS_USERNAME: ${{ secrets.SVN_USERNAME }}
