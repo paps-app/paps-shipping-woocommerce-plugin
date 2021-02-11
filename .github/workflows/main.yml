@@ -1,4 +1,4 @@
-- name: WordPress Org Deploy
+name: WordPress Org Deploy
   # You may pin to the exact commit or the version.
   # uses: varunsridharan/action-wp-org-deploy@883e1a79b989a71d16dd947ae4ed0fdacc4d73dd
   uses: varunsridharan/action-wp-org-deploy@1.3
