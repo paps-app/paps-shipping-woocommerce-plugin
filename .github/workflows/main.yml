@@ -20,3 +20,4 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           ASSETS_DIR: ${{ secrets.ASSETS_DIR }}
           SLUG: paps-shipping-for-woocommerce
+# à modifier!
