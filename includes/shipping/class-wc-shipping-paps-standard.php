@@ -135,7 +135,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
 
         $quantity = $values['quantity'] ? $values['quantity'] : 1;
         $item_weight = $_product->get_weight() ? $_product->get_weight() : 1;
-        $weight = $item_weight * $quantity;
+        $weight += $item_weight * $quantity;
 
         if (
           !$package['destination']['city'] ||
@@ -170,13 +170,15 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         'destination' => $dropoff_address,
         'packageSize' => $package_size
       ); 
-      if ($this->is_express == "yes") {
-        $quoteRequestParams['deliveryType'] = "express";
-      }
 
       $quote = wc_paps()
         ->api()
         ->getQuote($quoteRequestParams);
+	    
+      if (is_wp_error($quote)) {
+	  error_log(print_r($quote, true));
+	  return;
+      }		    
 
       $cost = $quote['data']['quote'];
 
