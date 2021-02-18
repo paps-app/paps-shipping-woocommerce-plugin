@@ -67,10 +67,6 @@ class WC_Paps
       $this,
       'paps_woocommerce_shipping_methods_standard'
     ]);
-    add_filter('woocommerce_shipping_methods', [
-      $this,
-      'paps_woocommerce_shipping_methods_express'
-    ]);
 
     add_filter(
       'woocommerce_shipping_calculator_enable_postcode',
@@ -119,7 +115,6 @@ class WC_Paps
   public function paps_woocommerce_shipping_init()
   {
     require_once 'includes/shipping/class-wc-shipping-paps-standard.php';
-    require_once 'includes/shipping/class-wc-shipping-paps-express.php';
   }
 
   public function action_woocommerce_checkout_update_order_review($array, $int)
@@ -137,12 +132,6 @@ class WC_Paps
   public function paps_woocommerce_shipping_methods_standard($methods)
   {
     $methods['paps'] = 'WC_Shipping_Paps';
-    return $methods;
-  }
-
-  public function paps_woocommerce_shipping_methods_express($methods)
-  {
-    $methods['paps_express'] = 'WC_Shipping_Paps_Express';
     return $methods;
   }
 
@@ -249,13 +238,7 @@ class WC_Paps
           } else {
             $paramsPaps['jobAmountToReceive'] = 0;
           }
-
-          if ($this->settings['is_express']) {
-            $paramsPaps['jobDescription'] =
-              $paramsPaps['jobDescription'] .
-              ' --- La livraison choisie est Express';
-          }
-
+		
           $delivery = wc_paps()
             ->api()
             ->submitDeliveryRequest($paramsPaps);
@@ -505,15 +488,7 @@ class WC_Paps
     $shipping_method = @array_shift($order->get_shipping_methods());
     $shipping_method_id = $shipping_method['method_id'];
 
-    // if ($shipping_method_id !== 'paps_express') {
-    //   wc_paps()->debug('shipping_method_id: ' . print_r($shipping_method));
-    //   return;
-    // }
-
-    if (
-      !($shipping_method_id == 'paps') &&
-      !($shipping_method_id == 'paps_express')
-    ) {
+    if (!($shipping_method_id == 'paps')) {
       /* ?> <?php echo '<pre>', print_r($shipping_method_id, 1), '</pre>'; ?> <?php */
       return;
     }
