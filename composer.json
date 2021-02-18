@@ -1,6 +1,6 @@
 {
   "require": {
-    "paps-app/paps-php-client": "^0.0.9"
+    "paps-app/paps-php-client": "^0.1.1"
   },
   "autoload": {
     "files": [

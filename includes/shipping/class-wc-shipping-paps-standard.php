@@ -133,11 +133,9 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       foreach ($package['contents'] as $item_id => $values) {
         $_product = $values['data'];
 
-        $quantity = $values['quantity'] || 1;
-        $item_weight = $_product->get_weight() || 1;
-        $weight = $item_weight * $quantity;
-        // $product_id = $_product->get_id();
-        // $weight = $weight + $_product->get_weight() * $values['quantity'];
+        $quantity = $values['quantity'] ? $values['quantity'] : 1;
+        $item_weight = $_product->get_weight() ? $_product->get_weight() : 1;
+        $weight += $item_weight * $quantity;
 
         if (
           !$package['destination']['city'] ||
@@ -161,27 +159,26 @@ class WC_Shipping_Paps extends WC_Shipping_Method
             $package['destination']['state'];
 
           if (
-            !contains("Sénégal", $dropoff_address) &&
             $package['destination']['country'] == "SN"
           ) {
             $dropoff_address = $dropoff_address . ", Senegal";
           }
-        }
-      }
+        }  }
 
       $quoteRequestParams = array(
         'origin' => $pickup_adress,
         'destination' => $dropoff_address,
         'packageSize' => $package_size
-      );
-
-      if ($this->is_express == "yes") {
-        $quoteRequestParams['deliveryType'] = "express";
-      }
+      ); 
 
       $quote = wc_paps()
         ->api()
         ->getQuote($quoteRequestParams);
+	    
+      if (is_wp_error($quote)) {
+	  error_log(print_r($quote, true));
+	  return;
+      }		    
 
       $cost = $quote['data']['quote'];
 
@@ -214,18 +211,19 @@ class WC_Shipping_Paps extends WC_Shipping_Method
 
   public function get_package_size($weight)
   {
-    $package_size = null;
+    $package_size = "small";
     if ($weight > 5 && $weight < 30) {
       $package_size = "medium";
-    } elseif ($weight > 30 && $weight < 60) {
+    } elseif ($weight >= 30 && $weight < 60) {
       $package_size = "large";
-    } elseif ($weight > 60 && $weight < 100) {
+    } elseif ($weight >= 60 && $weight < 100) {
       $package_size = "xLarge";
-    } else {
-      $package_size = "small";
-    }
+    } elseif ($weight >= 100) {
+	  $package_size = "xxLarge";
+	}
     return $package_size;
   }
+
 
   /**
    * Check if settings are not empty

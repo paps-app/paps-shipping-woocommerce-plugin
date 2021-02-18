@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Paps Shipping for WooCommerce
 	Description: Paps Shipping & Delivery Tracking Integration for WooCommerce
-	Version: 1.4.3
+	Version: 2.0
 	Author: Paps
 	Author URI: www.paps.sn
 */
@@ -63,12 +63,7 @@ class WC_Paps
       $this,
       'paps_woocommerce_shipping_init'
     ]);
-
-    add_filter('woocommerce_shipping_methods', [
-      $this,
-      'paps_woocommerce_shipping_methods_express'
-    ]);
-    add_filter('woocommerce_shipping_methods', [
+	  add_filter('woocommerce_shipping_methods', [
       $this,
       'paps_woocommerce_shipping_methods_standard'
     ]);
@@ -100,13 +95,6 @@ class WC_Paps
       array($this, 'show_delivery_details_on_order'),
       20
     );
-
-    // add_action(
-    //   'woocommerce_checkout_update_order_review',
-    //   array($this, 'action_woocommerce_checkout_update_order_review'),
-    //   10,
-    //   2
-    // );
   }
 
   /**
@@ -127,7 +115,6 @@ class WC_Paps
   public function paps_woocommerce_shipping_init()
   {
     require_once 'includes/shipping/class-wc-shipping-paps-standard.php';
-    require_once 'includes/shipping/class-wc-shipping-paps-express.php';
   }
 
   public function action_woocommerce_checkout_update_order_review($array, $int)
@@ -148,12 +135,6 @@ class WC_Paps
     return $methods;
   }
 
-  public function paps_woocommerce_shipping_methods_express($methods)
-  {
-    $methods['paps_express'] = 'WC_Shipping_Paps_Express';
-    return $methods;
-  }
-
   /**
    * Order Status Handle to created or delete Paps delivery
    *
@@ -162,7 +143,6 @@ class WC_Paps
   public function handle_order_status_change($order_id)
   {
     $order = new WC_Order($order_id);
-    // $product = new WC_Product();
 
     $items = $order->get_items();
 
@@ -196,14 +176,6 @@ class WC_Paps
           'customerAddress' => $dropoff_address,
           'customerPhone' => $order->billing_phone
         ];
-
-        //   if (!empty($order->customer_note)) {
-        //     $paramsPaps['jobDescription'] =
-        //       $paramsPaps['jobDescription'] .
-        //       '. Notes du client à livrer: ' .
-        //       $order->customer_note;
-        //   }
-
         if (!empty($order->shipping_city)) {
           $paramsPaps['customerAddress'] =
             $paramsPaps['customerAddress'] . ', ' . $order->shipping_city;
@@ -236,7 +208,7 @@ class WC_Paps
               ->api()
               ->getQuote(array(
                 'origin' => $this->settings['pickup_address'],
-                'destination' => $dropoff_address,
+                'destination'|| $pt => $dropoff_address,
                 'packageSize' => $package_size
               ));
 
@@ -266,13 +238,7 @@ class WC_Paps
           } else {
             $paramsPaps['jobAmountToReceive'] = 0;
           }
-
-          if ($this->settings['is_express']) {
-            $paramsPaps['jobDescription'] =
-              $paramsPaps['jobDescription'] .
-              ' --- La livraison choisie est Express';
-          }
-
+		
           $delivery = wc_paps()
             ->api()
             ->submitDeliveryRequest($paramsPaps);
@@ -394,16 +360,16 @@ class WC_Paps
 
   public function get_package_size($weight)
   {
-    $package_size = null;
+    $package_size = "small";
     if ($weight > 5 && $weight < 30) {
       $package_size = "medium";
-    } elseif ($weight > 30 && $weight < 60) {
+    } elseif ($weight >= 30 && $weight < 60) {
       $package_size = "large";
-    } elseif ($weight > 60 && $weight < 100) {
+    } elseif ($weight >= 60 && $weight < 100) {
       $package_size = "xLarge";
-    } else {
-      $package_size = "small";
-    }
+    } elseif ($weight >= 100) {
+	  $package_size = "xxLarge";
+	}
     return $package_size;
   }
 
@@ -522,15 +488,7 @@ class WC_Paps
     $shipping_method = @array_shift($order->get_shipping_methods());
     $shipping_method_id = $shipping_method['method_id'];
 
-    // if ($shipping_method_id !== 'paps_express') {
-    //   wc_paps()->debug('shipping_method_id: ' . print_r($shipping_method));
-    //   return;
-    // }
-
-    if (
-      !($shipping_method_id == 'paps') &&
-      !($shipping_method_id == 'paps_express')
-    ) {
+    if (!($shipping_method_id == 'paps')) {
       /* ?> <?php echo '<pre>', print_r($shipping_method_id, 1), '</pre>'; ?> <?php */
       return;
     }

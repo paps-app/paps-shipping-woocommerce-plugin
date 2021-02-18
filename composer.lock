@@ -8,27 +8,27 @@
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.3.3",
+            "version": "7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba"
+                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/407b0cb880ace85c9b63c5f9551db498cb2d50ba",
-                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/0aa74dfb41ae110835923ef10a9d803a22d50e79",
+                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/promises": "^1.0",
-                "guzzlehttp/psr7": "^1.4",
-                "php": ">=5.5"
+                "guzzlehttp/promises": "^1.4",
+                "guzzlehttp/psr7": "^1.7",
+                "php": "^ 7.2.5 || ^ 8,0"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
-                "psr/log": "^1.0"
+                "phpunit/phpunit": "^ 8.5.5 || ^ 9.3.5",
+                "psr/log": "^1.1"
             },
             "suggest": {
                 "psr/log": "Required for using the Log middleware"
@@ -36,7 +36,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.3-dev"
+                    "dev-master": "7.1.x-dev"
                 }
             },
             "autoload": {
@@ -69,32 +69,32 @@
                 "rest",
                 "web service"
             ],
-            "time": "2018-04-22T15:46:56+00:00"
+            "time": "2021-02-09T07:52:12+00:00"
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "v1.3.1",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
+                "reference": "60d379c243457e073cff02bc323a2a86cb355631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/60d379c243457e073cff02bc323a2a86cb355631",
+                "reference": "60d379c243457e073cff02bc323a2a86cb355631",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.0"
+                "symfony / phpunit-bridge ": "^ 4.4 || ^ 5,1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.4.x-dev"
                 }
             },
             "autoload": {
@@ -120,20 +120,20 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20T10:07:11+00:00"
+            "time": "2020-09-30T07:37+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a"
+                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/53330f47520498c0ae1f61f7e2c90f55690c06a3",
+                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +146,7 @@
             },
             "require-dev": {
                 "ext-zlib": "*",
-                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
+                "phpunit/phpunit": "~ 4.8.36 || ^ 5.7.27 || ^ 6.5.14 || ^ 7.5.20 || ^ 8.5.8 || ^ 9.3.10"
             },
             "suggest": {
                 "zendframework/zend-httphandlerrunner": "Emit PSR-7 responses"
@@ -154,7 +154,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -191,25 +191,25 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-07-01T23:21:34+00:00"
+            "time": "2021-02-08T12:12:49+00:00"
         },
         {
             "name": "paps-app/paps-php-client",
-            "version": "0.0.9",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paps-app/paps-php-client.git",
-                "reference": "812d3623dad12e9734c994a4245f04bfbc8b3211"
+                "reference": "3d97537f484214fe6499a6e3337a992cc179f77f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paps-app/paps-php-client/zipball/812d3623dad12e9734c994a4245f04bfbc8b3211",
-                "reference": "812d3623dad12e9734c994a4245f04bfbc8b3211",
+                "url": "https://api.github.com/repos/paps-app/paps-php-client/zipball/3d97537f484214fe6499a6e3337a992cc179f77f",
+                "reference": "3d97537f484214fe6499a6e3337a992cc179f77f",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "6.3.3",
-                "php": "^5.6 || ~7.0"
+                "guzzlehttp/guzzle": "^ 6.3 || ~ 6,5",
+                "php": "^ 5,6 || ~ 7,0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.6"
@@ -226,8 +226,8 @@
             ],
             "authors": [
                 {
-                    "name": "Madiodio Gaye",
-                    "homepage": "https://github.com/madiodio"
+                    "name": "kiamet MAVOUNGOU",
+                    "homepage": "https://github.com/kiamet"
                 }
             ],
             "description": "Paps API Client for PHP",
@@ -236,7 +236,7 @@
                 "API-Client",
                 "paps"
             ],
-            "time": "2019-07-24T23:17:02+00:00"
+            "time": "2021-02-10T08:47:37+00:00"
         },
         {
             "name": "psr/http-message",
