@@ -128,7 +128,21 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       $pickup_adress = $this->get_option('pickup_address');
       $dropoff_address = null;
 
-      // wc_paps()->debug('Currency: ' . print_r(get_option('woocommerce_currency')));
+      if (
+        !$package['destination']['city'] ||
+        !$package['destination']['country']
+      ) {
+        return wc_paps()->debug(
+          "Il n'y a aucune adresse saisie lors de la commande, veuillez renseigner ce champs afin qu'on puisse calculer le tarif de la livraison de votre colis",
+          true
+        );
+      } else {
+        $dropoff_address =
+          ($package['destination']['address'] ? $package['destination']['address'] . ',' : '') .
+          $package['destination']['city'] . ',' .
+          ($package['destination']['state'] ? $package['destination']['state'] . ',' : '') . 
+          WC()->countries->countries[$package['destination']['country']];
+      }
 
       foreach ($package['contents'] as $item_id => $values) {
         $_product = $values['data'];
@@ -136,39 +150,12 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         $quantity = $values['quantity'] ? $values['quantity'] : 1;
         $item_weight = $_product->get_weight() ? $_product->get_weight() : 1;
         $weight += $item_weight * $quantity;
-
-        if (
-          !$package['destination']['city'] ||
-          !$package['destination']['state']
-        ) {
-          return wc_paps()->debug(
-            "Il n'y a aucune adresse saisie lors de la commande, veuillez renseigner ce champs afin qu'on puisse calculer le tarif de la livraison de votre colis",
-            true
-          );
-        }
-        //  elseif (empty($package['destination']['address'])) {
-        //   # code...
-        // }
-        else {
-          $package_size = $this->get_package_size($weight);
-          $dropoff_address =
-            $package['destination']['address'] .
-            ',' .
-            $package['destination']['city'] .
-            ',' .
-            $package['destination']['state'];
-
-          if (
-            $package['destination']['country'] == "SN"
-          ) {
-            $dropoff_address = $dropoff_address . ", Senegal";
-          }
-        }  }
+      }
 
       $quoteRequestParams = array(
         'origin' => $pickup_adress,
         'destination' => $dropoff_address,
-        'packageSize' => $package_size
+        'weight' => $weight
       ); 
 
       $quote = wc_paps()
@@ -208,22 +195,6 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       }
     }
   }
-
-  public function get_package_size($weight)
-  {
-    $package_size = "small";
-    if ($weight > 5 && $weight < 30) {
-      $package_size = "medium";
-    } elseif ($weight >= 30 && $weight < 60) {
-      $package_size = "large";
-    } elseif ($weight >= 60 && $weight < 100) {
-      $package_size = "xLarge";
-    } elseif ($weight >= 100) {
-	  $package_size = "xxLarge";
-	}
-    return $package_size;
-  }
-
 
   /**
    * Check if settings are not empty
