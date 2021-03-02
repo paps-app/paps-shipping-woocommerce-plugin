@@ -1,0 +1,22 @@
+- nom: WordPress Org Deploy
+  # Vous pouvez épingler le commit exact ou la version.
+  # utilise: varunsridharan / action-wp-org-deploy @ 3ed49a93016699fb9ecfd36df2b6a5546f28e4ca
+  utilise: varunsridharan/action-wp-org-deploy@3ed49a93016699fb9ecfd36df2b6a5546f28e4ca
+  avec:
+    # WordPress.org Nom d'utilisateur
+    WORDPRESS_USERNAME: kiamet  
+    # WordPress.org MOT DE PASSE
+    WORDPRESS_PASSWORD: Malavelh@22  
+    # Plugin Slug
+    SLUG: # facultatif, la valeur par défaut est 
+    # Version du plugin
+    VERSION: 1.5.2
+    # Plugin Assets Dir pour WordPress.org
+    ASSETS_DIR:  .wordpress-org
+    # WordPress.org Exclure le fichier de liste
+    IGNORE_FILE: .prettierignore 
+    # WordPress.org Assets Exclude List File
+    ASSETS_IGNORE_FILE: .wporgassetsignore
+    # Fournissez un chemin ici, le fichier zip final peut être stocké. qui peut être utilisé par d'autres actions.
+    DIST_LOCATION: https://github.com/paps-app/paps-shipping-woocommerce-plugin.git 
+	
