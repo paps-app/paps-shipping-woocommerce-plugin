@@ -1,6 +1,7 @@
-=== Paps shipping for WooCommerce ===
+=== Paps shipping for WooCommerce plugin ===
 Contributors: kiamet
 Tags: paps, paps-api, livraison, woocommerce, woocommerce shipping, paps shipping
+Requires PHP: 7.0
 Requires at least: 4.0
 Tested up to: 5.2.3
 Stable tag: trunk
@@ -8,7 +9,7 @@ Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-L'intégration de Paps pour WooCommerce vous permet de gérer efficacement et sans effort votre demandes de livraison de colis directement à travers votre admin Wordpress.
+L'intégration de Paps pour WooCommerce vous permet de gérer efficacement et sans effort votre demandes de livraison de colis directement à travers votre admin WordPress.
 
 == Description ==
 
@@ -72,7 +73,7 @@ In the search field type “WooCommerce Paps Integration” and click Search Plu
 
 = Manual installation =
 
-The manual installation method involves downloading the plugin and uploading it to your webserver via your favourite FTP application. The WordPress codex contains [instructions on how to do this here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
+The manual installation method involves downloading the plugin and uploading it to your webserver via your favourite FTP application. The WordPress codex contains [instructions on how to do this here](https://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
 == Changelog ==
 
