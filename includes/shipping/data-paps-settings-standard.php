@@ -36,7 +36,7 @@ $delivery_cancellation_statuses = array_filter(
  */
 return array(
   'enabled' => array(
-    'title' => __('Expédition avec Paps Standard', 'paps-wc'),
+    'title' => __('Paps Shipping', 'paps-wc'),
     'type' => 'checkbox',
     'label' => __('Activé', 'paps-wc'),
     'default' => 'no'
@@ -52,18 +52,8 @@ return array(
       'paps-wc'
     )
   ),
-  // 'title' => array(
-  //   'title' => __('Titre de la méthode', 'paps-wc'),
-  //   'type' => 'text',
-  //   'description' => __(
-  //     'Ceci contôle le titre qui s\'affiche durant le check-out',
-  //     'paps-wc'
-  //   ),
-  //   'default' => __('Forfait', 'paps-wc'),
-  //   'desc_tip' => true
-  // ),
   'api_key' => array(
-    'title' => __('Clé API', 'paps-wc'),
+    'title' => __('Token', 'paps-wc'),
     'type' => 'text',
     'description' => __(
       'Le clé API vous a été envoyée dans l\'email de confirmation après l\'avoir obtenue sur https://developers.paps.sn',
@@ -90,7 +80,7 @@ return array(
     'default' => ''
   ),
   'pickup_address' => array(
-    'title' => __('Adresse de Ramassage ou Pickup', 'paps-wc'),
+    'title' => __('Adresse de Pickup', 'paps-wc'),
     'type' => 'text',
     'description' => __(
       'Adresse de votre entreprise où on effectuera les ramassages des colis à livrer.',
@@ -99,7 +89,7 @@ return array(
     'default' => ''
   ),
   'pickup_phone_number' => array(
-    'title' => __('Numéro de téléphone du ramassage', 'paps-wc'),
+    'title' => __('Numéro de téléphone', 'paps-wc'),
     'type' => 'text',
     'description' => __(
       'Peut être Le numéro de téléphone de votre entreprise',
@@ -109,7 +99,7 @@ return array(
   ),
   'email_monespace_account' => array(
     'title' => __(
-      'Adresse email enregistré sur votre compte Monespace',
+      'Adresse email utilisée lors de la création de votre compte MyPaps',
       'paps-wc'
     ),
     'type' => 'text',
@@ -119,17 +109,6 @@ return array(
     ),
     'default' => ''
   ),
-  // 'is_packs_enabled' => array(
-  //   'title' => __('Courses avec Packs achetés', 'paps-wc'),
-  //   'type' => 'checkbox',
-  //   'label' => __('Activé', ' '),
-  //   'desc_tip' => true,
-  //   'description' => __(
-  //     'Lorsque activée, cette option permet aux client de pouvoir choisir lui-même le mode de livraison Express ou Programmé (Standard) avec une tarification fixe. Note: vous devez forcément acheter un pack auprès du service commercial.',
-  //     'paps-wc'
-  //   ),
-  //   'default' => 'no'
-  // ),
   'delivery_submission' => array(
     'title' => __(
       'Envoyer la requête à Paps quand la commande à l\'état suivant:',
@@ -165,6 +144,25 @@ return array(
       'failed' => _x('Echec', 'paps-wc')
     ),
     'desc_tip' => true
+  ),
+  'added_flat_rate' => array(
+    'title' => __('Frais en supplément', 'paps-wc'),
+    'type' => 'number',
+    'description' => __(
+      'Montant fixe s\'ajoutant aux frais de livraison calculés par Paps.',
+      'paps-wc'
+    ),
+    'default' => ''
+  ),
+  'flat_rate' => array(
+    'title' => __('Montant forfait pour toutes les courses', 'paps-wc'),
+    'type' => 'number',
+    'desc_tip' => true,
+    'description' => __(
+      'Montant fixe des frais de livraison sur toute la plateforme. Important: en choisissant ce mode vous supportez vous-même tous les frais de livraison s\'ajoutant au tarif normal de la course.',
+      'paps-wc'
+    ),
+    'default' => ''
   ),
   'pickup_notes' => array(
     'title' => __('Notes sur le ramassage', 'paps-wc'),
@@ -205,7 +203,7 @@ return array(
     'default' => 'no',
     'desc_tip' => true,
     'description' => __(
-      'Activer le logging pour loger les actions de de lintégration de Paps dans le dossier wc-logs',
+      'Activer cet option pour enregistrer les actions de de lintégration de Paps dans le dossier wc-logs',
       'paps-wc'
     )
   )

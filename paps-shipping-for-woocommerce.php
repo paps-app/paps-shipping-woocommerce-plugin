@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Paps Shipping for WooCommerce
 	Description: Paps Shipping & Delivery Tracking Integration for WooCommerce
-	Version: 2.0
+	Version: 3.0.0
 	Author: Paps
 	Author URI: www.paps.sn
 */
@@ -63,7 +63,12 @@ class WC_Paps
       $this,
       'paps_woocommerce_shipping_init'
     ]);
-	  add_filter('woocommerce_shipping_methods', [
+
+    add_filter('woocommerce_shipping_methods', [
+      $this,
+      'paps_woocommerce_shipping_methods_express'
+    ]);
+    add_filter('woocommerce_shipping_methods', [
       $this,
       'paps_woocommerce_shipping_methods_standard'
     ]);
@@ -95,6 +100,13 @@ class WC_Paps
       array($this, 'show_delivery_details_on_order'),
       20
     );
+
+    // add_action(
+    //   'woocommerce_checkout_update_order_review',
+    //   array($this, 'action_woocommerce_checkout_update_order_review'),
+    //   10,
+    //   2
+    // );
   }
 
   /**
@@ -115,6 +127,7 @@ class WC_Paps
   public function paps_woocommerce_shipping_init()
   {
     require_once 'includes/shipping/class-wc-shipping-paps-standard.php';
+    require_once 'includes/shipping/class-wc-shipping-paps-express.php';
   }
 
   public function action_woocommerce_checkout_update_order_review($array, $int)
@@ -135,14 +148,101 @@ class WC_Paps
     return $methods;
   }
 
+  public function paps_woocommerce_shipping_methods_express($methods)
+  {
+    $methods['paps_relais'] = 'WC_Shipping_Paps_Relais';
+    return $methods;
+  }
+
   /**
    * Order Status Handle to created or delete Paps delivery
    *
    * @param $order_id
    */
+  public function callAPI($method, $url, $data){
+    $curl = curl_init();
+    switch ($method){
+       case "POST":
+          curl_setopt($curl, CURLOPT_POST, 1);
+          if ($data)
+             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+          break;
+       case "PUT":
+          curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+          if ($data)
+             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);               
+          break;
+       default:
+          if ($data)
+             $url = sprintf("%s?%s", $url, http_build_query($data));
+    }
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+       'Content-Type: application/json',
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    $result = curl_exec($curl);
+    if(!$result){die("Connection Failure");}
+    curl_close($curl);
+    return $result;
+ }
+
+ public function callTASK($data){
+  $curl = curl_init();
+  $acces_token = $this->settings['api_key'];
+  curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://api.papslogistics.com/tasks',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS => json_encode($data),
+  CURLOPT_HTTPHEADER => array(
+      'Authorization: Bearer '.$acces_token,
+      'Content-Type: application/json'
+  ),
+  ));
+
+
+  $response = curl_exec($curl);
+
+  curl_close($curl);
+  return $response;
+}
+public function callTaskProd($data){
+  $curl = curl_init();
+  $acces_token = $this->settings['api_key'];
+  curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://paps-api.papslogistics.com/tasks',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS => json_encode($data),
+  CURLOPT_HTTPHEADER => array(
+      'Authorization: Bearer '.$acces_token,
+      'Content-Type: application/json'
+  ),
+  ));
+
+
+  $response = curl_exec($curl);
+
+  curl_close($curl);
+  return $response;
+}
+  
   public function handle_order_status_change($order_id)
   {
     $order = new WC_Order($order_id);
+    // $product = new WC_Product();
 
     $items = $order->get_items();
 
@@ -153,37 +253,63 @@ class WC_Paps
 
       if (!$task_status) {
         $dropoff_address = $order->shipping_address_1;
-
+        $dropoff_address2 = $order->shipping_address_2;
         $datetime = new DateTime();
         $datetime->modify("+30 minutes");
+        $product_object = $order->item->get_product();
+        $product_name = $product_object->get_name();
+        $product_price = $product_object->get_price();
+        $product_weight = $product_object->get_weight() * $order->item["quantity"];
+        $package_size = $this->get_package_size($product_weight);
+
+        $receiverData = [
+            "firstname"=> $order->shipping_first_name,
+            "lastname"=> $order->shipping_last_name,
+            "phoneNumber"=> $order->billing_phone,
+            "email"=> $order->shipping_email,
+            "entreprise"=> $order->shipping_company,
+            "address"=> $dropoff_address,
+            "specificationAddress"=> $dropoff_address2
+        ];
+
+        $parcelsData = [
+            "packageSize"=> "S",
+            "description"=> $order->get_product_from_item .' venant du site de' .
+                ' ' .
+               $this->settings['pickup_business_name'] .
+                ' -- Tarif déterminé de la course ' .
+                ' Le mode de payement choisi est ' .
+                $order->payment_method . '.' .''. 'note du client:'. $order->get_customer_note,
+            "price"=> $order->shipping_total,
+            "amountCollect"=> $order->get_prices_include_tax
+        ];
 
         $paramsPaps = [
-          'jobDescription' =>
-            'Commande venant du site de' .
-            ' ' .
-            $this->settings['pickup_business_name'] .
-            ' -- Tarif déterminé de la course ' .
-            $order->shipping_total .
-            ' Le mode de payement choisi est ' .
-            $order->payment_method,
-          'jobPickupPhone' => $this->settings['pickup_phone_number'],
-          'jobPickupName' => $this->settings['pickup_name'],
-          'jobPickupAddress' => $this->settings['pickup_address'],
-          'jobPickupDatetime' => date("Y-m-d G:i:s"),
-          'jobDeliveryDatetime' => $datetime->format("Y-m-d G:i:s"),
-          'customerUsername' =>
-            $order->shipping_first_name . ' ' . $order->shipping_last_name,
-          'customerAddress' => $dropoff_address,
-          'customerPhone' => $order->billing_phone
+          "type"=> "PICKUP",
+          "datePickup"=> $datetime->format("Y-m-d"),
+          "timePickup"=> $datetime->format("G:i:s"),
+          "vehicleType"=> "SCOOTER",
+          "address"=> $this->settings['pickup_address'],
+          "receiver" => $receiverData,
+          "parcels" => $parcelsData
         ];
+       
+
+        //   if (!empty($order->customer_note)) {
+        //     $paramsPaps['parcels']['description'] =
+        //       $paramsPaps['parcels']['description'] .
+        //       '. Notes du client à livrer: ' .
+        //       $order->customer_note;
+        //   }
+
         if (!empty($order->shipping_city)) {
-          $paramsPaps['customerAddress'] =
-            $paramsPaps['customerAddress'] . ', ' . $order->shipping_city;
+          $paramsPaps['receiver']['address'] =
+            $paramsPaps['receiver']['address'] . ', ' . $order->shipping_city;
         }
 
         if (!empty($order->shipping_country)) {
-          $paramsPaps['customerAddress'] =
-            $paramsPaps['customerAddress'] . ', ' . $order->shipping_country;
+          $paramsPaps['receiver']['address']  =
+            $paramsPaps['receiver']['address']  . ', ' . $order->shipping_country;
         }
 
         foreach ($items as $item) {
@@ -196,7 +322,6 @@ class WC_Paps
           $package_size = $this->get_package_size($product_weight);
 
           $cost = 0;
-
           if (
             isset($this->settings['flat_rate']) &&
             !empty($this->settings['flat_rate']) &&
@@ -204,19 +329,18 @@ class WC_Paps
           ) {
             $cost = $this->settings['flat_rate'];
           } else {
-            $quote = wc_paps()
-              ->api()
-              ->getQuote(array(
-                'origin' => $this->settings['pickup_address'],
-                'destination'|| $pt => $dropoff_address,
-                'packageSize' => $package_size
-              ));
-
-            $cost = $quote['data']['quote'];
+            
+            $make_call = $this->callAPI('POST', 'https://api.papslogistics.com/marketplace', json_encode(array(
+              'origin' => $this->settings['pickup_address'],
+              'destination' => $dropoff_address,
+              'weight' => $product_weight
+            )));
+            $response = json_decode($make_call, true);
+            $cost  = $response['data']['price'];
           }
 
-          $paramsPaps['jobPackageSize'] = $package_size;
-          $paramsPaps['jobDescription'] =
+          $paramsPaps['parcels']['packageSize'] = $package_size;
+          $paramsPaps['parcels']['description'] =
             'Commande venant du site de' .
             ' ' .
             $this->settings['pickup_business_name'] .
@@ -233,26 +357,39 @@ class WC_Paps
             $order->payment_method;
 
           if ($order->payment_method == "cod") {
-            $paramsPaps['jobAmountToReceive'] =
+            $paramsPaps['parcels']['amountCollect'] =
               (int) $cost + (int) $product_price * (int) $item["quantity"];
           } else {
-            $paramsPaps['jobAmountToReceive'] = 0;
+            $paramsPaps['parcels']['amountCollect'] = 0;
           }
-		
-          $delivery = wc_paps()
-            ->api()
-            ->submitDeliveryRequest($paramsPaps);
+
+          if ($this->settings['is_relay']) {
+            $paramsPaps['parcels']['description'] =
+              $paramsPaps['parcels']['description'] .
+              ' --- La livraison se fera en Point Relais';
+          }
+          if ($this->settings['test'] == 'yes') {
+            $make_call = $this->callTASK($paramsPaps);
+            $apiResult = json_decode($make_call, true);
+            $delivery = $apiResult['data']['job']['job_orders']['_id'];
+          }
+            $make_call = $this->callTaskProd($paramsPaps);
+            $apiResult = json_decode($make_call, true);
 
           if (!is_wp_error($delivery)) {
+            wp_mail($order->shipping_email,
+             'La livraison est prévue pour le:',
+             $apiResult['data']['job']['job_orders']['order_parcels']['parcel_delivery_date'],
+             print_r($delivery, true));
             update_post_meta(
               $order_id,
               'paps_pickup_id',
-              $delivery['data']['pickup_job_id']
+              $delivery = $apiResult['data']['job']['job_orders']['_id']
             );
             update_post_meta(
               $order_id,
               'paps_delivery_id',
-              $delivery['data']['delivery_job_id']
+              $delivery = $apiResult['data']['job']['job_orders']['order_parcels']['_id']
             );
             update_post_meta(
               $order_id,
@@ -262,7 +399,7 @@ class WC_Paps
             update_post_meta(
               $order_id,
               'paps_delivery_tracking_link',
-              $delivery['data']['delivery_tracing_link']
+              $delivery = $apiResult['data']['job']['job_orders']['order_parcels']['parcel_delivery_date']
             );
             update_post_meta(
               $order_id,
@@ -360,16 +497,16 @@ class WC_Paps
 
   public function get_package_size($weight)
   {
-    $package_size = "small";
+    $package_size = null;
     if ($weight > 5 && $weight < 30) {
       $package_size = "medium";
-    } elseif ($weight >= 30 && $weight < 60) {
+    } elseif ($weight > 30 && $weight < 60) {
       $package_size = "large";
-    } elseif ($weight >= 60 && $weight < 100) {
+    } elseif ($weight > 60 && $weight < 100) {
       $package_size = "xLarge";
-    } elseif ($weight >= 100) {
-	  $package_size = "xxLarge";
-	}
+    } else {
+      $package_size = "small";
+    }
     return $package_size;
   }
 
@@ -488,7 +625,15 @@ class WC_Paps
     $shipping_method = @array_shift($order->get_shipping_methods());
     $shipping_method_id = $shipping_method['method_id'];
 
-    if (!($shipping_method_id == 'paps')) {
+    // if ($shipping_method_id !== 'paps_relais') {
+    //   wc_paps()->debug('shipping_method_id: ' . print_r($shipping_method));
+    //   return;
+    // }
+
+    if (
+      !($shipping_method_id == 'paps') &&
+      !($shipping_method_id == 'paps_relais')
+    ) {
       /* ?> <?php echo '<pre>', print_r($shipping_method_id, 1), '</pre>'; ?> <?php */
       return;
     }

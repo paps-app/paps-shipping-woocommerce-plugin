@@ -19,10 +19,10 @@ class WC_Shipping_Paps extends WC_Shipping_Method
     $this->id = 'paps';
     $this->instance_id = absint($instance_id);
 
-    $method_title = __('Paps (Standard)', 'paps-wc');
+    $method_title = __('Paps Shipping', 'paps-wc');
 
     $this->method_title = $method_title;
-    $this->method_description = __('Paps Shipping Support', 'paps-wc');
+    $this->method_description = __('Paps Shipping Support ', 'paps-wc');
     $this->init();
 
     // $this->supports = array('shipping-zones');
@@ -43,7 +43,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
     $this->init_form_fields();
     $this->init_settings();
 
-    $this->title = __('Livraison Standard (Paps)', 'paps-wc');
+    $this->title = __('Paps Shipping', 'paps-wc');
 
     $this->api_key = $this->get_option('api_key');
     $this->signature_secret_key = $this->get_option('signature_secret_key');
@@ -85,11 +85,39 @@ class WC_Shipping_Paps extends WC_Shipping_Method
    *
    * @param array $package
    */
+
+  public function callAPI($method, $url, $data){
+    $curl = curl_init();
+    switch ($method){
+       case "POST":
+          curl_setopt($curl, CURLOPT_POST, 1);
+          if ($data)
+             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+          break;
+       case "PUT":
+          curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+          if ($data)
+             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);               
+          break;
+       default:
+          if ($data)
+             $url = sprintf("%s?%s", $url, http_build_query($data));
+    }
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+       'Content-Type: application/json',
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    $result = curl_exec($curl);
+    if(!$result){die("Connection Failure");}
+    curl_close($curl);
+    return $result;
+ }
   public function calculate_shipping($package = [])
   {
     if (
       isset($this->flat_rate) &&
-      // !empty($this->flat_rate) &&
       is_numeric($this->flat_rate)
     ) {
       $rate = array(
@@ -104,7 +132,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
       isset($this->is_packs_enabled) &&
       $this->is_packs_enabled == "yes"
     ) {
-      $cost = 1250;
+      $cost = 0;
       if (
         isset($this->added_flat_rate) &&
         !empty($this->added_flat_rate) &&
@@ -124,7 +152,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
     } else {
       $weight = 0;
       $cost = 0;
-      $quote = null;
+      $make_call = null;
       $pickup_adress = $this->get_option('pickup_address');
       $dropoff_address = null;
 
@@ -157,20 +185,18 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         'destination' => $dropoff_address,
         'weight' => $weight
       ); 
+      $make_call = $this->callAPI('POST', 'https://api.papslogistics.com/marketplace', json_encode($quoteRequestParams));
+      $response = json_decode($make_call, true);
+	   
+        if (is_wp_error($make_call)) {
+      error_log(print_r($make_call, true));
+      return;
+        }
 
-      $quote = wc_paps()
-        ->api()
-        ->getQuote($quoteRequestParams);
-	    
-      if (is_wp_error($quote)) {
-	  error_log(print_r($quote, true));
-	  return;
-      }		    
-
-      $cost = $quote['data']['quote'];
-
-      if (get_option('woocommerce_currency') == "EUR") {
-        $cost = $cost / 655;
+      $cost = $response['data']['price'];
+      
+      if (get_option('woocommerce_currency') === "EUR") {
+        $cost = $cost / 1;
         $cost = number_format((float) $cost, 2, '.', '');
       }
 
@@ -182,7 +208,7 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         $cost = $cost + $this->added_flat_rate;
       }
 
-      if (!is_wp_error($quote)) {
+      if (!is_wp_error($make_call)) {
         $rate = array(
           'id' => $this->id,
           'label' => $this->title,
@@ -229,11 +255,5 @@ class WC_Shipping_Paps extends WC_Shipping_Method
         '</p>
 			</div>';
     }
-
-    // if (!$this->signature_secret_key && $this->enabled == 'yes') {
-    //     echo '<div class="error">
-    // 		<p>' . __('Paps a été activé, mais la singature n\'a pas été renseigné, Les webhooks ne fonctionneront pas si ce champs n\'est pas renseigné', 'wf-shipping-dhl') . '</p>
-    // 	</div>';
-    // }
   }
 }
