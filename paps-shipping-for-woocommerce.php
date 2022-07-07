@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Paps Shipping for WooCommerce
 	Description: Paps Shipping & Delivery Tracking Integration for WooCommerce
-	Version: 3.0.0
+	Version: 1.4.3
 	Author: Paps
 	Author URI: www.paps.sn
 */
@@ -499,13 +499,13 @@ public function callTaskProd($data){
   {
     $package_size = null;
     if ($weight > 5 && $weight < 30) {
-      $package_size = "medium";
+      $package_size = "M";
     } elseif ($weight > 30 && $weight < 60) {
-      $package_size = "large";
+      $package_size = "L";
     } elseif ($weight > 60 && $weight < 100) {
-      $package_size = "xLarge";
+      $package_size = "XL";
     } else {
-      $package_size = "small";
+      $package_size = "S";
     }
     return $package_size;
   }
