@@ -166,34 +166,6 @@ return array(
     ),
     'desc_tip' => true
   ),
-  'added_flat_rate' => array(
-    'title' => __('Frais en supplément', 'paps-wc'),
-    'type' => 'number',
-    'description' => __(
-      'Montant fixe s\'ajoutant aux frais de livraison calculés par Paps.',
-      'paps-wc'
-    ),
-    'default' => ''
-  ),
-  'flat_rate' => array(
-    'title' => __('Montant forfait pour toutes les courses', 'paps-wc'),
-    'type' => 'number',
-    'desc_tip' => true,
-    'description' => __(
-      'Montant fixe des frais de livraison sur toute la plateforme. Important: en choisissant ce mode vous supportez vous-même tous les frais de livraison s\'ajoutant au tarif normal de la course.',
-      'paps-wc'
-    ),
-    'default' => ''
-  ),
-  'signature_secret_key' => array(
-    'title' => __('Clé de Signature Secrète', 'paps-wc'),
-    'type' => 'text',
-    'description' => __(
-      'Optionnel, Utilisé pour valider les requêtes Webhook',
-      'paps-wc'
-    ),
-    'default' => ''
-  ),
   'pickup_notes' => array(
     'title' => __('Notes sur le ramassage', 'paps-wc'),
     'type' => 'text',
